@@ -1,8 +1,21 @@
 import { modals } from "@mantine/modals"
-import { addDoc, collection, deleteDoc, doc, serverTimestamp } from "firebase/firestore"
+import { addDoc, collection, deleteDoc, doc, serverTimestamp, where } from "firebase/firestore"
 import { fire } from "./firebase"
 import { SITES_COLLECTION } from "./firestore"
+import { useCollectionQuery, useUser } from "@zachsents/fire-query"
+import { useRouter } from "next/router"
 
+
+export function useSites(includeCurrent = true) {
+    const router = useRouter()
+    const { data: user } = useUser()
+
+    const query = useCollectionQuery([SITES_COLLECTION], [
+        user && where("owner", "==", user.uid),
+    ])
+
+    return [includeCurrent ? query.data : query.data?.filter(s => s.id !== router.query.siteId), query]
+}
 
 export const openCreateSiteModal = () => modals.openContextModal({
     modal: "CreateSite",

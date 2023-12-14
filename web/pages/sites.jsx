@@ -1,21 +1,14 @@
-import { Anchor, Button, Card, Group, Stack, Text, Title } from "@mantine/core"
+import { Anchor, Button, Card, Center, Group, Loader, Stack, Text, Title } from "@mantine/core"
 import Header from "@web/components/Header"
-import { SITES_COLLECTION } from "@web/modules/firestore"
-import { confirmDeleteSite, openCreateSiteModal } from "@web/modules/sites"
+import { confirmDeleteSite, openCreateSiteModal, useSites } from "@web/modules/sites"
 import { plural } from "@web/modules/util"
-import { useCollectionQuery, useUser } from "@zachsents/fire-query"
-import { where } from "firebase/firestore"
 import Link from "next/link"
 import { TbPlus } from "react-icons/tb"
 
 
 export default function SitesPage() {
 
-    const { data: user } = useUser()
-
-    const { data: sites } = useCollectionQuery([SITES_COLLECTION], [
-        user && where("owner", "==", user.uid),
-    ])
+    const [sites, { isLoading }] = useSites()
 
     return (
         <>
@@ -28,15 +21,19 @@ export default function SitesPage() {
                     <Button leftIcon={<TbPlus />} onClick={openCreateSiteModal}>New Site</Button>
                 </Group>
 
-                {sites?.length > 0 ?
-                    <div className="grid grid-cols-3 gap-xl">
-                        {sites?.map(s =>
-                            <SiteCard key={s.id} {...s} />
-                        )}
-                    </div> :
-                    <Text className="text-gray text-center py-md">
-                        No sites yet. Go make one!
-                    </Text>}
+                {isLoading ?
+                    <Center className="my-20">
+                        <Loader variant="bars" />
+                    </Center> :
+                    sites?.length > 0 ?
+                        <div className="grid grid-cols-3 gap-xl">
+                            {sites?.map(s =>
+                                <SiteCard key={s.id} {...s} />
+                            )}
+                        </div> :
+                        <Text className="text-gray text-center py-md">
+                            No sites yet. Go make one!
+                        </Text>}
             </div>
         </>
     )

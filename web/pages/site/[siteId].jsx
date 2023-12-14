@@ -1,11 +1,11 @@
 import { Button, Divider, Group, Menu, ScrollArea, Stack, Switch, Text, TextInput, Textarea, Tooltip } from "@mantine/core"
 import Header from "@web/components/Header"
 import { SITES_COLLECTION } from "@web/modules/firestore"
-import { defaultElement, defaultVariant, generateId, openCreateSiteModal } from "@web/modules/sites"
+import { defaultElement, defaultVariant, generateId, openCreateSiteModal, useSites } from "@web/modules/sites"
 import { sortFromEntries, useActiveUpdateStore, useRemoteValue } from "@web/modules/util"
-import { useCollectionQuery, useDocument, useUser } from "@zachsents/fire-query"
+import { useDocument } from "@zachsents/fire-query"
 import classNames from "classnames"
-import { deleteField, where } from "firebase/firestore"
+import { deleteField } from "firebase/firestore"
 import _ from "lodash"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -16,14 +16,10 @@ import { TbChevronDown, TbCopy, TbDeviceLaptop, TbHash, TbPlus, TbTextPlus, TbTr
 export default function SitePage() {
 
     const router = useRouter()
-    const { data: user } = useUser()
 
     const { data: site, update } = useDocument([SITES_COLLECTION, router.query.siteId])
 
-    const { data: _otherSites } = useCollectionQuery([SITES_COLLECTION], [
-        user && where("owner", "==", user.uid),
-    ])
-    const otherSites = _otherSites?.filter(s => s.id !== router.query.siteId)
+    const [otherSites] = useSites(false)
 
     const createAndSelectVariant = async () => {
         const newId = generateId()
