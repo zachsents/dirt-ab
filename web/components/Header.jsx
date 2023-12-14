@@ -17,7 +17,7 @@ export default function Header({ fixed = true, className }) {
         )}>
             <Group className="max-w-7xl mx-auto w-full justify-between gap-xl p-md">
                 <Group className="gap-10">
-                    <Brand src="/logo.png" includeText />
+                    <Brand src="/assets/logo.png" includeText />
 
                     <Group>
                         <Anchor component={Link} href="#">Pricing</Anchor>
