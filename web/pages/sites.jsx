@@ -1,5 +1,6 @@
 import { Anchor, Button, Card, Center, Group, Loader, Stack, Text, Title } from "@mantine/core"
 import Header from "@web/components/Header"
+import { useMustBeSignedIn } from "@web/modules/firebase"
 import { confirmDeleteSite, openCreateSiteModal, useSites } from "@web/modules/sites"
 import { plural } from "@web/modules/util"
 import Link from "next/link"
@@ -7,6 +8,8 @@ import { TbPlus } from "react-icons/tb"
 
 
 export default function SitesPage() {
+
+    useMustBeSignedIn()
 
     const [sites, { isLoading }] = useSites()
 

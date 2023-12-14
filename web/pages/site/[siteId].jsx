@@ -1,9 +1,10 @@
 import { Button, Divider, Group, Menu, ScrollArea, Stack, Switch, Text, TextInput, Textarea, Tooltip } from "@mantine/core"
 import Header from "@web/components/Header"
+import { useMustBeSignedIn } from "@web/modules/firebase"
 import { SITES_COLLECTION } from "@web/modules/firestore"
 import { defaultElement, defaultVariant, generateId, openCreateSiteModal, useSites } from "@web/modules/sites"
 import { sortFromEntries, useActiveUpdateStore, useRemoteValue } from "@web/modules/util"
-import { useDocument } from "@zachsents/fire-query"
+import { useDocument, useUser } from "@zachsents/fire-query"
 import classNames from "classnames"
 import { deleteField } from "firebase/firestore"
 import _ from "lodash"
@@ -16,7 +17,10 @@ import { TbChevronDown, TbCopy, TbDeviceLaptop, TbHash, TbPlus, TbTextPlus, TbTr
 
 export default function SitePage() {
 
+    useMustBeSignedIn()
+
     const router = useRouter()
+    const { data: user } = useUser()
 
     const { data: site, update } = useDocument([SITES_COLLECTION, router.query.siteId])
 
@@ -33,9 +37,19 @@ export default function SitePage() {
     const isUpdating = useActiveUpdateStore(s => s.isUpdating())
 
     useEffect(() => {
-        if (router.isReady && !router.query.v && site?.variants && Object.keys(site.variants).length > 0)
+        if (!router.isReady)
+            return
+
+        if (user !== undefined && site && site?.owner !== user?.uid) {
+            router.replace("/sites")
+            return
+        }
+
+        if (!router.query.v && site?.variants && Object.keys(site.variants).length > 0) {
             router.replace(`/site/${router.query.siteId}?v=${Object.keys(site.variants)[0]}`)
-    }, [router.query.v, router.isReady, site])
+            return
+        }
+    }, [router.isReady, router.query.v, user?.uid, site])
 
     return (
         <>
