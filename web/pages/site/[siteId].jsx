@@ -9,6 +9,7 @@ import { deleteField } from "firebase/firestore"
 import _ from "lodash"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { useEffect } from "react"
 import { useState } from "react"
 import { TbChevronDown, TbCopy, TbDeviceLaptop, TbHash, TbPlus, TbTextPlus, TbTrash } from "react-icons/tb"
 
@@ -30,6 +31,11 @@ export default function SitePage() {
     }
 
     const isUpdating = useActiveUpdateStore(s => s.isUpdating())
+
+    useEffect(() => {
+        if (router.isReady && !router.query.v && site?.variants && Object.keys(site.variants).length > 0)
+            router.replace(`/site/${router.query.siteId}?v=${Object.keys(site.variants)[0]}`)
+    }, [router.query.v, router.isReady, site])
 
     return (
         <>
