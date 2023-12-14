@@ -1,0 +1,5 @@
+{
+    "name": "Dirt A/B",
+    "description": "Split test for dirt-cheap",
+    "sendLoggedInUsersTo": "/sites"
+}
