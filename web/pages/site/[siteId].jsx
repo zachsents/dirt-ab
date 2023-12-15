@@ -1,4 +1,4 @@
-import { Button, Divider, Group, Menu, ScrollArea, Stack, Switch, Text, TextInput, Textarea, Tooltip } from "@mantine/core"
+import { Button, Code, CopyButton, Divider, Group, Menu, Popover, ScrollArea, Stack, Switch, Text, TextInput, Textarea, Tooltip } from "@mantine/core"
 import Header from "@web/components/Header"
 import { useMustBeSignedIn } from "@web/modules/firebase"
 import { SITES_COLLECTION } from "@web/modules/firestore"
@@ -12,7 +12,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { useState } from "react"
-import { TbChevronDown, TbCopy, TbDeviceLaptop, TbHash, TbPlus, TbTextPlus, TbTrash } from "react-icons/tb"
+import { TbCheck, TbChevronDown, TbCode, TbCopy, TbDeviceLaptop, TbHash, TbPlus, TbTextPlus, TbTrash } from "react-icons/tb"
 
 
 export default function SitePage() {
@@ -51,6 +51,10 @@ export default function SitePage() {
         }
     }, [router.isReady, router.query.v, user?.uid, site])
 
+    const siteCode = router.query.siteId ?
+        `<script src="https://dirt-ab.web.app/site-script.js" id="dirt-ab-site-script" data-site-id="${router.query.siteId}"></script>` :
+        ""
+
     return (
         <>
             <div className="fixed top-0 left-0 w-screen z-50 pointer-events-none">
@@ -61,40 +65,68 @@ export default function SitePage() {
                     backdropFilter: "blur(8px)",
                 }}>
                     <Group className="justify-between">
-                        <Menu shadow="lg" position="bottom-start" withinPortal zIndex={50}>
-                            <Menu.Target>
-                                <div>
-                                    <Tooltip label="Change Site">
-                                        <Button
-                                            variant="outline"
-                                            leftIcon={<TbDeviceLaptop />} rightIcon={<TbChevronDown className="ml-md" />}
-                                            className="font-normal"
-                                        >
-                                            {site?.name}
-                                        </Button>
-                                    </Tooltip>
-                                </div>
-                            </Menu.Target>
+                        <Group className="gap-xl">
+                            <Menu shadow="lg" position="bottom-start" withinPortal zIndex={50}>
+                                <Menu.Target>
+                                    <div>
+                                        <Tooltip label="Change Site">
+                                            <Button
+                                                variant="outline"
+                                                leftIcon={<TbDeviceLaptop />} rightIcon={<TbChevronDown className="ml-md" />}
+                                                className="font-normal"
+                                            >
+                                                {site?.name}
+                                            </Button>
+                                        </Tooltip>
+                                    </div>
+                                </Menu.Target>
+                                <Menu.Dropdown className="min-w-[12rem]">
+                                    {otherSites?.length > 0 ?
+                                        otherSites?.map(s =>
+                                            <Menu.Item
+                                                component={Link} href={`/site/${s.id}`}
+                                                key={s.id}
+                                            >
+                                                {s.name}
+                                            </Menu.Item>
+                                        ) :
+                                        <Text className="text-sm text-gray text-center py-md">
+                                            No other sites
+                                        </Text>}
+                                    <Menu.Item icon={<TbPlus />} color="primary" onClick={openCreateSiteModal}>
+                                        New Site
+                                    </Menu.Item>
+                                </Menu.Dropdown>
+                            </Menu>
 
-                            <Menu.Dropdown className="min-w-[12rem]">
-                                {otherSites?.length > 0 ?
-                                    otherSites?.map(s =>
-                                        <Menu.Item
-                                            component={Link} href={`/site/${s.id}`}
-                                            key={s.id}
-                                        >
-                                            {s.name}
-                                        </Menu.Item>
-                                    ) :
-                                    <Text className="text-sm text-gray text-center py-md">
-                                        No other sites
-                                    </Text>}
-
-                                <Menu.Item icon={<TbPlus />} color="primary" onClick={openCreateSiteModal}>
-                                    New Site
-                                </Menu.Item>
-                            </Menu.Dropdown>
-                        </Menu>
+                            <Popover shadow="lg" position="bottom-start" withinPortal zIndex={50}>
+                                <Popover.Target>
+                                    <Button
+                                        leftIcon={<TbCode />} rightIcon={<TbChevronDown className="ml-md" />}
+                                        variant="subtle"
+                                    >
+                                        Website Code
+                                    </Button>
+                                </Popover.Target>
+                                <Popover.Dropdown className="max-w-[20rem]">
+                                    <Stack>
+                                        <Text>
+                                            Paste this code at the end of your website's <Code>&lt;body&gt;</Code> tag.
+                                        </Text>
+                                        <CopyButton value={siteCode}>
+                                            {({ copied, copy }) => (
+                                                <Button color={copied ? "green" : ""} leftIcon={copied ? <TbCheck /> : <TbCopy />} onClick={copy}>
+                                                    {copied ? "Copied!" : "Copy Code"}
+                                                </Button>
+                                            )}
+                                        </CopyButton>
+                                        <Code block className="whitespace-pre-wrap">
+                                            {siteCode}
+                                        </Code>
+                                    </Stack>
+                                </Popover.Dropdown>
+                            </Popover>
+                        </Group>
 
                         {isUpdating ?
                             <Text className="text-sm text-gray">Saving...</Text> :
@@ -229,7 +261,7 @@ function VariantView() {
                 label="Variant Name"
                 description="Must be unique and only contain letters, numbers, dashes, and underscores."
                 placeholder="variant_name"
-                value={name}
+                value={name || ""}
                 onChange={ev => setName(ev.currentTarget.value)}
                 error={nameError}
             />
@@ -317,7 +349,7 @@ function ElementEditor({ id: elementId }) {
                 label="Element ID"
                 description="This corresponds to the ID of the element in your HTML. This changes across all variants."
                 placeholder="target-id"
-                value={targetId}
+                value={targetId || ""}
                 onChange={ev => setTargetId(ev.currentTarget.value)}
                 error={targetIdError}
                 icon={<TbHash />}
@@ -326,7 +358,7 @@ function ElementEditor({ id: elementId }) {
             <Switch
                 label="Hidden"
                 description="If checked, this element will be hidden on this variant."
-                checked={hidden}
+                checked={hidden || false}
                 onChange={ev => setHidden(ev.currentTarget.checked)}
             />
 
@@ -335,7 +367,7 @@ function ElementEditor({ id: elementId }) {
                     label="Text Content"
                     description="The text that will be displayed in this element."
                     placeholder="The next game-changing product is here!"
-                    value={textContent}
+                    value={textContent || ""}
                     onChange={ev => setTextContent(ev.currentTarget.value)}
                     autosize minRows={2} maxRows={10}
                 />}

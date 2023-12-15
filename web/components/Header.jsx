@@ -20,7 +20,6 @@ export default function Header({ fixed = true, className }) {
                     <Brand src="/assets/logo.png" includeText />
 
                     <Group>
-                        <Anchor component={Link} href="#">Pricing</Anchor>
                     </Group>
                 </Group>
 
