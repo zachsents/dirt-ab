@@ -29,7 +29,7 @@ export default function LoginPage() {
 
     return (
         <Center className="h-screen w-screen">
-            <Card withBorder className="rounded-xl shadow-lg p-10 mb-10">
+            <Card withBorder className="rounded-md shadow-lg p-10 mb-10">
                 <Stack>
                     <Title
                         order={1}
