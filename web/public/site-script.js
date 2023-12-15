@@ -24,12 +24,12 @@ new MutationObserver(async () => {
 
             if (!domEl) return
 
-            if (elementVariant.mapValue.fields.hidden.booleanValue) {
+            if (elementVariant.mapValue.fields.hidden?.booleanValue) {
                 domEl.style.display = "none"
                 return
             }
 
-            if (elementVariant.mapValue.fields.text.stringValue) {
+            if (elementVariant.mapValue.fields.text?.stringValue) {
                 domEl.innerText = elementVariant.mapValue.fields.text.stringValue
             }
         })
