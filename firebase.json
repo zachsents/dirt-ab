@@ -23,6 +23,10 @@
         ],
         "rewrites": [
             {
+                "source": "/site-script.js",
+                "destination": "/dirtab.js"
+            },
+            {
                 "regex": "^/site/([^/]+?)(?:/)?$",
                 "destination": "/site/[siteId].html"
             }

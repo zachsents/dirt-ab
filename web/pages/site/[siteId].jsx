@@ -52,7 +52,7 @@ export default function SitePage() {
     }, [router.isReady, router.query.v, user?.uid, site])
 
     const siteCode = router.query.siteId ?
-        `<script src="https://dirtab.com/site-script.js" id="dirt-ab-site-script" data-site-id="${router.query.siteId}"></script>` :
+        `<script src="https://dirtab.com/dirtab.js" id="dirt-ab-site-script" data-site-id="${router.query.siteId}"></script>` :
         ""
 
     const urlParam = site?.variants[router.query.v] ? `?dv=${site?.variants[router.query.v]?.name}` : ""

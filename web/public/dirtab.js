@@ -18,8 +18,6 @@ new MutationObserver(async () => {
         const siteDoc = await fetch(`https://firestore.googleapis.com/v1/projects/dirt-ab/databases/(default)/documents/sites/${siteId}`)
             .then(res => res.json())
 
-        debug("Site document", siteDoc)
-
         const variant = Object.values(siteDoc.fields.variants.mapValue.fields).find(v => v.mapValue.fields.name.stringValue === variantName).mapValue.fields
         const findElementTargetId = elId => siteDoc.fields.elements.mapValue.fields[elId].mapValue.fields.targetId.stringValue
 
