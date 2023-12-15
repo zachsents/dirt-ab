@@ -176,7 +176,7 @@ export default function SitePage() {
             </div>
 
             <div className="max-w-7xl w-full mx-auto p-md">
-                <div className="mt-40 ml-64">
+                <div className="mt-48 ml-64">
                     {router.query.v ?
                         <VariantView /> :
                         <Text className="text-gray text-center py-md">

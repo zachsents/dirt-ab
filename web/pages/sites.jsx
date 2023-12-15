@@ -17,7 +17,7 @@ export default function SitesPage() {
         <>
             <Header />
 
-            <div className="mt-20 max-w-7xl w-full mx-auto p-md">
+            <div className="mt-32 max-w-7xl w-full mx-auto p-md">
                 <Group className="justify-between mb-xl">
                     <Title order={1}>My Sites</Title>
 
