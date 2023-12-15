@@ -59,7 +59,7 @@ export default function Header({ fixed = true, className }) {
                     className="flex items-center md:block md:relative px-md py-2 bg-primary hover:bg-primary-700 transition-colors text-white no-underline"
                 >
                     <Text className="md:text-center flex-1">
-                        Want to make more marketing automations?
+                        Wanna make more marketing automations?
                     </Text>
                     <div className="md:absolute top-1/2 right-10 md:-translate-y-1/2">
                         <ActionIcon
