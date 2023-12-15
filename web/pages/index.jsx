@@ -9,7 +9,7 @@ export default function LandingPage() {
     return (
         <>
             <Header />
-            <Center className="w-screen h-screen">
+            <Center className="w-screen min-h-screen p-xl">
                 <Stack className="items-center max-w-2xl">
                     <Title order={1} className="text-center text-5xl">
                         Dirt-cheap A/B testing for your website

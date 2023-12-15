@@ -15,7 +15,7 @@ export default function Brand({ className, src, includeText = false }) {
                             alt={`${siteInfo.name} logo`}
                             className="h-9 w-auto aspect-square rounded-sm shrink-0"
                         />}
-                        <Text className="text-2xl font-bold">
+                        <Text className="text-xl md:text-2xl font-bold">
                             {siteInfo.name}
                         </Text>
                     </> :
