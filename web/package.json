@@ -7,7 +7,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "deploy": "firebase deploy --only hosting"
+        "deploy": "next-firebase-rewrites build -f .. && firebase deploy --only hosting"
     },
     "dependencies": {
         "@emotion/react": "^11.11.1",
