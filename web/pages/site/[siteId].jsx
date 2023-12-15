@@ -1,4 +1,4 @@
-import { Button, Code, CopyButton, Divider, Group, Menu, Popover, ScrollArea, Stack, Switch, Text, TextInput, Textarea, Tooltip } from "@mantine/core"
+import { ActionIcon, Button, Code, CopyButton, Divider, Group, Menu, Popover, ScrollArea, Stack, Switch, Text, TextInput, Textarea, Tooltip } from "@mantine/core"
 import Header from "@web/components/Header"
 import { useMustBeSignedIn } from "@web/modules/firebase"
 import { SITES_COLLECTION } from "@web/modules/firestore"
@@ -54,6 +54,8 @@ export default function SitePage() {
     const siteCode = router.query.siteId ?
         `<script src="https://dirt-ab.web.app/site-script.js" id="dirt-ab-site-script" data-site-id="${router.query.siteId}"></script>` :
         ""
+
+    const urlParam = site?.variants[router.query.v] ? `?dv=${site?.variants[router.query.v]?.name}` : ""
 
     return (
         <>
@@ -126,6 +128,22 @@ export default function SitePage() {
                                     </Stack>
                                 </Popover.Dropdown>
                             </Popover>
+
+                            {urlParam ? <Group className="gap-2">
+                                <Text className="text-sm text-gray">
+                                    URL Parameter:
+                                </Text>
+                                <Code className="text-lg font-bold">?dv={site?.variants[router.query.v]?.name}</Code>
+                                <CopyButton value={urlParam}>
+                                    {({ copied, copy }) => (
+                                        <Tooltip label={copied ? "Copied!" : "Copy"}>
+                                            <ActionIcon color={copied ? "green" : "gray"} onClick={copy}>
+                                                {copied ? <TbCheck /> : <TbCopy />}
+                                            </ActionIcon>
+                                        </Tooltip>
+                                    )}
+                                </CopyButton>
+                            </Group> : null}
                         </Group>
 
                         {isUpdating ?

@@ -21,7 +21,12 @@
             "**/.*",
             "**/node_modules/**"
         ],
-        "rewrites": [],
+        "rewrites": [
+            {
+                "regex": "^/site/([^/]+?)(?:/)?$",
+                "destination": "/site/[siteId].html"
+            }
+        ],
         "cleanUrls": true
     },
     "storage": {
