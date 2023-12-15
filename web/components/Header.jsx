@@ -1,13 +1,18 @@
-import { Anchor, Avatar, Group, Menu } from "@mantine/core"
+import { ActionIcon, Anchor, Avatar, Group, Menu, Text } from "@mantine/core"
 import Brand from "@web/components/Brand"
+import { useGlobalStore } from "@web/modules/util"
 import { useUser } from "@zachsents/fire-query"
 import classNames from "classnames"
 import Link from "next/link"
+import { TbX } from "react-icons/tb"
 
 
 export default function Header({ fixed = true, className }) {
 
     const { data: user, signOut } = useUser()
+
+    const showingLeadMagnetAlert = useGlobalStore(s => s.showingLeadMagnetAlert)
+    const hideLeadMagnetAlert = useGlobalStore(s => s.hideLeadMagnetAlert)
 
     return (
         <header className={classNames(
@@ -47,6 +52,28 @@ export default function Header({ fixed = true, className }) {
                     </>}
                 </Group>
             </Group>
+
+            {showingLeadMagnetAlert &&
+                <a
+                    href="https://workflow.dog?dv=mkt&ref=dirt" target="_blank" rel="noreferrer"
+                    className="flex items-center md:block md:relative px-md py-2 bg-primary hover:bg-primary-700 transition-colors text-white no-underline"
+                >
+                    <Text className="md:text-center flex-1">
+                        Want to make more marketing automations?
+                    </Text>
+                    <div className="md:absolute top-1/2 right-10 md:-translate-y-1/2">
+                        <ActionIcon
+                            variant="transparent"
+                            className="text-white hover:bg-primary-500"
+                            onClick={ev => {
+                                ev.preventDefault()
+                                hideLeadMagnetAlert()
+                            }}
+                        >
+                            <TbX />
+                        </ActionIcon>
+                    </div>
+                </a>}
         </header>
     )
 }

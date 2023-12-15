@@ -3,7 +3,7 @@ import Header from "@web/components/Header"
 import { useMustBeSignedIn } from "@web/modules/firebase"
 import { SITES_COLLECTION } from "@web/modules/firestore"
 import { defaultElement, defaultVariant, generateId, openCreateSiteModal, useSites } from "@web/modules/sites"
-import { sortFromEntries, useActiveUpdateStore, useRemoteValue } from "@web/modules/util"
+import { sortFromEntries, useGlobalStore, useRemoteValue } from "@web/modules/util"
 import { useDocument, useUser } from "@zachsents/fire-query"
 import classNames from "classnames"
 import { deleteField } from "firebase/firestore"
@@ -34,7 +34,7 @@ export default function SitePage() {
         router.push(`/site/${router.query.siteId}?v=${newId}`)
     }
 
-    const isUpdating = useActiveUpdateStore(s => s.isUpdating())
+    const isUpdating = useGlobalStore(s => s.isUpdating())
 
     useEffect(() => {
         if (!router.isReady)

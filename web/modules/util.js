@@ -8,13 +8,15 @@ export function plural(word, q, includeNumber = false) {
 }
 
 
-export const useActiveUpdateStore = create((set, get) => ({
+export const useGlobalStore = create((set, get) => ({
     activeUpdates: 0,
     trackUpdate: (promise) => {
         set(s => ({ activeUpdates: s.activeUpdates + 1 }))
         promise.finally(() => set(s => ({ activeUpdates: s.activeUpdates - 1 })))
     },
     isUpdating: () => get().activeUpdates > 0,
+    showingLeadMagnetAlert: true,
+    hideLeadMagnetAlert: () => set({ showingLeadMagnetAlert: false }),
 }))
 
 
@@ -22,7 +24,7 @@ export function useRemoteValue(remoteValue, updateFunc, debounce = 700) {
 
     const [current, setCurrent] = useState(remoteValue)
 
-    const trackUpdate = useActiveUpdateStore(s => s.trackUpdate)
+    const trackUpdate = useGlobalStore(s => s.trackUpdate)
 
     useEffect(() => {
         setCurrent(remoteValue)
