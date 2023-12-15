@@ -43,7 +43,7 @@ export default function LandingPage() {
             </Center>
 
             {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-            <script src="https://dirt-ab.web.app/site-script.js" id="dirt-ab-site-script" data-site-id="qs7XuVsyTnpOVWDGwtnf" key="dirt-ab-site-script"></script>
+            <script src="https://dirtab.com/site-script.js" id="dirt-ab-site-script" data-site-id="qs7XuVsyTnpOVWDGwtnf" key="dirt-ab-site-script"></script>
         </>
     )
 }
