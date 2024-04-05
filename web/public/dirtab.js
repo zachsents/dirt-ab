@@ -6,8 +6,10 @@ new MutationObserver(async () => {
 
         const urlParams = new URLSearchParams(window.location.search)
         const variantName = urlParams.get("dv")
+        const hasVariantName = urlParams.has("dv")
+        const shouldUseRandomVariant = hasVariantName && !variantName
 
-        if (!variantName) return
+        if (!hasVariantName) return
 
         const dirtScriptTag = document.getElementById("dirt-ab-site-script")
         const siteId = dirtScriptTag.getAttribute("data-site-id")
@@ -18,10 +20,16 @@ new MutationObserver(async () => {
         const siteDoc = await fetch(`https://firestore.googleapis.com/v1/projects/dirt-ab/databases/(default)/documents/sites/${siteId}`)
             .then(res => res.json())
 
-        const variant = Object.values(siteDoc.fields.variants.mapValue.fields).find(v => v.mapValue.fields.name.stringValue === variantName).mapValue.fields
+        const variants = Object.values(siteDoc.fields.variants.mapValue.fields)
+            .map(v => v.mapValue.fields)
+
+        const variant = shouldUseRandomVariant
+            ? variants[Math.floor(Math.random() * variants.length)]
+            : variants.find(v => v.name.stringValue === variantName)
+
         const findElementTargetId = elId => siteDoc.fields.elements.mapValue.fields[elId].mapValue.fields.targetId.stringValue
 
-        debug("Found variant:", variantName)
+        debug("Found variant:", variant.name.stringValue)
 
         Object.entries(variant.elements.mapValue.fields).forEach(([elementId, elementVariant]) => {
             const targetId = findElementTargetId(elementId)
